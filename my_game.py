@@ -236,7 +236,7 @@ class IntroView(arcade.View):
 
         # Draw some text
         arcade.draw_text(
-            "Instructions Screen",
+            "Instructions Screen 2",
             self.window.width / 2,
             self.window.height / 2,
             arcade.color.WHITE,
