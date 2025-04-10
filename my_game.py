@@ -26,11 +26,11 @@ PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
 PLAYER_SHOT_SPEED = 300
 
-KEY_FIRE = arcade.key.SPACE
-KEY_RIGHT = arcade.key.D
-KEY_LEFT = arcade.key.A
-KEY_UP = arcade.key.W
-KEY_DOWN = arcade.key.S
+KEYS_FIRE = [arcade.key.SPACE]
+KEYS_RIGHT = [arcade.key.D, arcade.key.RIGHT]
+KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
+KEYS_UP = [arcade.key.W, arcade.key.UP]
+KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
 
 
 class GameView(arcade.View):
@@ -161,16 +161,16 @@ class GameView(arcade.View):
             self.game_over()
 
         # Track state of arrow keys
-        if key == KEY_UP:
+        if key in KEYS_UP:
             self.up_pressed = True
-        elif key == KEY_DOWN:
+        elif key in KEYS_DOWN:
             self.down_pressed = True
-        elif key == KEY_LEFT:
+        elif key in KEYS_LEFT:
             self.left_pressed = True
-        elif key == KEY_RIGHT:
+        elif key in KEYS_RIGHT:
             self.right_pressed = True
 
-        if key == KEY_FIRE:
+        if key in KEYS_FIRE:
             # Player gets points for firing?
             self.player_score += 10
 
@@ -191,19 +191,19 @@ class GameView(arcade.View):
         Called whenever a key is released.
         """
 
-        if key == KEY_UP:
+        if key in KEYS_UP:
             self.up_pressed = False
-        elif key == KEY_DOWN:
+        elif key in KEYS_DOWN:
             self.down_pressed = False
-        elif key == KEY_LEFT:
+        elif key in KEYS_LEFT:
             self.left_pressed = False
-        elif key == KEY_RIGHT:
+        elif key in KEYS_RIGHT:
             self.right_pressed = False
 
     def on_joybutton_press(self, joystick, button_no):
         print("Button pressed:", button_no)
         # Press the fire key
-        self.on_key_press(KEY_FIRE, [])
+        self.on_key_press(KEYS_FIRE, [])
 
     def on_joybutton_release(self, joystick, button_no):
         print("Button released:", button_no)
