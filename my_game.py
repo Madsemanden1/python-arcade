@@ -203,7 +203,8 @@ class GameView(arcade.View):
     def on_joybutton_press(self, joystick, button_no):
         print("Button pressed:", button_no)
         # Press the fire key
-        self.on_key_press(KEYS_FIRE, [])
+        if len(KEYS_FIRE) > 0:
+            self.on_key_press(KEYS_FIRE[0], [])
 
     def on_joybutton_release(self, joystick, button_no):
         print("Button released:", button_no)
