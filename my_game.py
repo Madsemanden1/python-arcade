@@ -263,8 +263,16 @@ class IntroView(arcade.View):
         """
         Start the game when any key is pressed
         """
-        game_view = GameView()
-        self.window.show_view(game_view)
+        self.game_start()
+
+    def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
+        """
+        Start the game when any mouse button is released
+        """
+        self.game_start()
+
+    def game_start(self):
+        self.window.show_view(GameView())
 
 
 class GameOverView(arcade.View):
