@@ -48,7 +48,7 @@ class PlayerShot(arcade.Sprite):
     A shot fired by the Player
     """
 
-    def __init__(self, center_x, center_y, max_y_pos, speed=4, scale=1, start_angle=90):
+    def __init__(self, center_x, center_y, max_y_pos, speed=4, scale=1, angle=90):
         """
         Setup new PlayerShot object
         """
@@ -69,7 +69,7 @@ class PlayerShot(arcade.Sprite):
         self.max_y_pos = max_y_pos
 
         # Shoot points in this direction
-        self.angle = start_angle
+        self.angle = angle
 
         # Shot moves forward. Sets self.change_x and self.change_y
         self.forward(speed)
