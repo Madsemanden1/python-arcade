@@ -21,7 +21,9 @@ SCREEN_HEIGHT = 600
 
 # Variables controlling the player
 PLAYER_LIVES = 3
-PLAYER_SPEED_X = 200
+PLAYER_SPEED_FORWARDS = 100
+PLAYER_SPEED_BACKWARDS = PLAYER_SPEED_FORWARDS
+PLAYER_SPEED_ANGLE = 200
 PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
 PLAYER_SHOT_SPEED = 300
@@ -118,13 +120,20 @@ class GameView(arcade.View):
         """
 
         # Calculate player speed based on the keys pressed
+        self.player.change_angle = 0
         self.player.change_x = 0
+        self.player.change_y = 0
 
-        # Move player with keyboard
+        # Rotate player
         if self.left_pressed and not self.right_pressed:
-            self.player.change_x = -PLAYER_SPEED_X
+            self.player.change_angle = PLAYER_SPEED_ANGLE
         elif self.right_pressed and not self.left_pressed:
-            self.player.change_x = PLAYER_SPEED_X
+            self.player.change_angle = -PLAYER_SPEED_ANGLE
+
+        if self.up_pressed and not self.down_pressed:
+            self.player.forward(speed=PLAYER_SPEED_FORWARDS)
+        elif self.down_pressed and not self.up_pressed:
+            self.player.forward(speed=-PLAYER_SPEED_BACKWARDS)
 
         # Move player with joystick if present
         if self.joystick:
@@ -181,6 +190,7 @@ class GameView(arcade.View):
                 speed=PLAYER_SHOT_SPEED,
                 max_y_pos=SCREEN_HEIGHT,
                 scale=SPRITE_SCALING,
+                angle=self.player.angle
             )
 
             # Add the new shot to the list of shots
