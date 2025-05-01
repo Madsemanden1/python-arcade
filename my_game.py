@@ -22,6 +22,7 @@ SCREEN_HEIGHT = 600
 # Variables controlling the player
 PLAYER_LIVES = 3
 PLAYER_SPEED_X = 200
+PLAYER_SPEED_ANGLE = 200
 PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
 PLAYER_SHOT_SPEED = 300
@@ -118,13 +119,13 @@ class GameView(arcade.View):
         """
 
         # Calculate player speed based on the keys pressed
-        self.player.change_x = 0
+        self.player.change_angle = 0
 
         # Move player with keyboard
         if self.left_pressed and not self.right_pressed:
-            self.player.change_x = -PLAYER_SPEED_X
+            self.player.change_angle = PLAYER_SPEED_ANGLE
         elif self.right_pressed and not self.left_pressed:
-            self.player.change_x = PLAYER_SPEED_X
+            self.player.change_angle = -PLAYER_SPEED_ANGLE
 
         # Move player with joystick if present
         if self.joystick:
