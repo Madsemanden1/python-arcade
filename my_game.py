@@ -120,12 +120,19 @@ class GameView(arcade.View):
 
         # Calculate player speed based on the keys pressed
         self.player.change_angle = 0
+        self.player.change_x = 0
+        self.player.change_y = 0
 
-        # Move player with keyboard
+        # Rotate player
         if self.left_pressed and not self.right_pressed:
             self.player.change_angle = PLAYER_SPEED_ANGLE
         elif self.right_pressed and not self.left_pressed:
             self.player.change_angle = -PLAYER_SPEED_ANGLE
+
+        if self.up_pressed and not self.down_pressed:
+            self.player.forward(speed=100)
+        elif self.down_pressed and not self.up_pressed:
+            self.player.forward(speed=-100)
 
         # Move player with joystick if present
         if self.joystick:

@@ -6,7 +6,7 @@ class Player(arcade.Sprite):
     The player
     """
 
-    def __init__(self, min_x_pos, max_x_pos, center_x=0, center_y=0, scale=1):
+    def __init__(self, min_x_pos, max_x_pos, center_x=0, center_y=0, scale=1, angle=90):
         """
         Setup new Player object
         """
@@ -21,6 +21,9 @@ class Player(arcade.Sprite):
             center_y=center_y,
             filename="images/playerShip1_red.png",
             scale=scale,
+            flipped_diagonally=True,
+            flipped_horizontally=True,
+            angle=angle
         )
 
     def on_update(self, delta_time):
@@ -30,6 +33,7 @@ class Player(arcade.Sprite):
 
         # Update player's x position based on current speed in x dimension
         self.center_x += delta_time * self.change_x
+        self.center_y += delta_time * self.change_y
         self.angle += delta_time * self.change_angle
 
         # Enforce limits on player's x position
