@@ -21,7 +21,8 @@ SCREEN_HEIGHT = 600
 
 # Variables controlling the player
 PLAYER_LIVES = 3
-PLAYER_SPEED_X = 200
+PLAYER_SPEED_FORWARDS = 100
+PLAYER_SPEED_BACKWARDS = PLAYER_SPEED_FORWARDS
 PLAYER_SPEED_ANGLE = 200
 PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
@@ -130,9 +131,9 @@ class GameView(arcade.View):
             self.player.change_angle = -PLAYER_SPEED_ANGLE
 
         if self.up_pressed and not self.down_pressed:
-            self.player.forward(speed=100)
+            self.player.forward(speed=PLAYER_SPEED_FORWARDS)
         elif self.down_pressed and not self.up_pressed:
-            self.player.forward(speed=-100)
+            self.player.forward(speed=-PLAYER_SPEED_BACKWARDS)
 
         # Move player with joystick if present
         if self.joystick:
