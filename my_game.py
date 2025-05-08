@@ -8,6 +8,7 @@ Artwork from https://kenney.nl/assets/space-shooter-redux
 """
 
 import arcade
+import random
 
 # Import sprites from local file my_sprites.py
 from my_sprites import Player, PlayerShot
@@ -33,6 +34,8 @@ KEYS_RIGHT = [arcade.key.D, arcade.key.RIGHT]
 KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
 KEYS_UP = [arcade.key.W, arcade.key.UP]
 KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
+
+WALLS = 10
 
 
 class GameView(arcade.View):
@@ -66,6 +69,19 @@ class GameView(arcade.View):
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
+
+        self.walls_list = arcade.SpriteList()
+
+        for i in range(WALLS):
+            a = random.choice([0, 90])
+            w = arcade.Sprite(
+                center_x=random.randint(0,SCREEN_WIDTH),
+                center_y=random.randint(0, SCREEN_HEIGHT),
+                filename= "images/UI/buttonBlue.png",
+                scale=SPRITE_SCALING,
+                angle=a,
+            )
+            self.walls_list.append(w)
 
         # Get list of joysticks
         joysticks = arcade.get_joysticks()
@@ -105,6 +121,8 @@ class GameView(arcade.View):
 
         # Draw the player sprite
         self.player.draw()
+
+        self.walls_list.draw()
 
         # Draw players score on screen
         arcade.draw_text(
@@ -146,7 +164,7 @@ class GameView(arcade.View):
         self.player_shot_list.on_update(delta_time)
 
         # The game is over when the player scores a 100 points
-        if self.player_score >= 100:
+        if self.player_score >= 200:
             self.game_over()
 
     def game_over(self):
