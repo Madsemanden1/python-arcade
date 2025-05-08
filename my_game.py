@@ -35,7 +35,7 @@ KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
 KEYS_UP = [arcade.key.W, arcade.key.UP]
 KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
 
-WALLS = 10
+WALLS = 15
 
 
 class GameView(arcade.View):
@@ -73,12 +73,13 @@ class GameView(arcade.View):
         self.walls_list = arcade.SpriteList()
 
         for i in range(WALLS):
+            s = random.randint(1, 4)
             a = random.choice([0, 90])
             w = arcade.Sprite(
                 center_x=random.randint(0,SCREEN_WIDTH),
-                center_y=random.randint(0, SCREEN_HEIGHT),
+                center_y=random.randint(100, SCREEN_HEIGHT),
                 filename= "images/UI/buttonBlue.png",
-                scale=SPRITE_SCALING,
+                scale=s/4,
                 angle=a,
             )
             self.walls_list.append(w)
