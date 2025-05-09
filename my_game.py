@@ -73,13 +73,13 @@ class GameView(arcade.View):
         self.walls_list = arcade.SpriteList()
 
         for i in range(WALLS):
-            s = random.randint(1, 4)
+            s = random.randint(1, 2)
             a = random.choice([0, 90])
             w = arcade.Sprite(
                 center_x=random.randint(0,SCREEN_WIDTH),
-                center_y=random.randint(100, SCREEN_HEIGHT),
+                center_y=random.randint(100, SCREEN_HEIGHT-100),
                 filename= "images/UI/buttonBlue.png",
-                scale=s/4,
+                scale=s/3,
                 angle=a,
             )
             self.walls_list.append(w)
