@@ -164,6 +164,11 @@ class GameView(arcade.View):
         # Update the player shots
         self.player_shot_list.on_update(delta_time)
 
+        # check if shots hit any walls
+        for w in self.walls_list:
+            for s in w.collides_with_list(self.player_shot_list):
+                s.kill()
+
         # The game is over when the player scores a 100 points
         if self.player_score >= 200:
             self.game_over()
