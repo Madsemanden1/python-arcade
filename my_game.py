@@ -22,7 +22,7 @@ SCREEN_HEIGHT = 600
 
 # Variables controlling the player
 PLAYER_LIVES = 3
-PLAYER_SPEED_FORWARDS = 100
+PLAYER_SPEED_FORWARDS = 30
 PLAYER_SPEED_BACKWARDS = PLAYER_SPEED_FORWARDS
 PLAYER_SPEED_ANGLE = 200
 PLAYER_START_X = SCREEN_WIDTH / 2
@@ -52,7 +52,7 @@ class GameView(arcade.View):
         self.player_shot_list = arcade.SpriteList()
 
         # Set up the player info
-        self.player_score = 0
+        self.player_score = 20
         self.player_lives = PLAYER_LIVES
 
         # Create a Player object
@@ -127,7 +127,7 @@ class GameView(arcade.View):
 
         # Draw players score on screen
         arcade.draw_text(
-            f"SCORE: {self.player_score}",  # Text to show
+            f"Shots left: {self.player_score}",  # Text to show
             10,  # X position
             SCREEN_HEIGHT - 20,  # Y positon
             arcade.color.WHITE,  # Color of text
@@ -140,8 +140,13 @@ class GameView(arcade.View):
 
         # Calculate player speed based on the keys pressed
         self.player.change_angle = 0
-        self.player.change_x = 0
-        self.player.change_y = 0
+        # self.player.change_x = 0
+        # self.player.change_y = 0
+
+        # Player speed decreases
+        decrease = 0.9
+        self.player.change_x *= decrease
+        self.player.change_y *= decrease
 
         # Rotate player
         if self.left_pressed and not self.right_pressed:
@@ -165,8 +170,8 @@ class GameView(arcade.View):
         for w in self.walls_list:
             if w.collides_with_sprite(self.player):
                 # Gives the player the opposite speed
-                self.player.change_x *= -1
-                self.player.change_y *= -1
+                self.player.change_x *= -1.2
+                self.player.change_y *= -1.2
                 # Moves the player out of the wall
                 self.player.on_update(delta_time)
 
@@ -178,8 +183,8 @@ class GameView(arcade.View):
             for s in w.collides_with_list(self.player_shot_list):
                 s.kill()
 
-        # The game is over when the player scores a 100 points
-        if self.player_score >= 200:
+        # The game is over when the player shoots 20 times
+        if self.player_score <= 0:
             self.game_over()
 
     def game_over(self):
@@ -214,7 +219,7 @@ class GameView(arcade.View):
 
         if key in KEYS_FIRE:
             # Player gets points for firing?
-            self.player_score += 10
+            self.player_score -= 1
 
             # Create the new shot
             new_shot = PlayerShot(
@@ -368,7 +373,7 @@ class GameOverView(arcade.View):
 
         # Draw player's score
         arcade.draw_text(
-            f"Your score: {self.score}",
+            f"You had {self.score} shots left!",
             self.window.width / 2,
             self.window.height / 2 - 75,
             arcade.color.WHITE,
