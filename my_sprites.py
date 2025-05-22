@@ -6,7 +6,7 @@ class Player(arcade.Sprite):
     The player
     """
 
-    def __init__(self, min_x_pos, max_x_pos, center_x=0, center_y=0, scale=1, angle=90):
+    def __init__(self, min_x_pos, max_x_pos, min_y_pos, max_y_pos, center_x=0, center_y=0, scale=1, angle=90):
         """
         Setup new Player object
         """
@@ -14,6 +14,8 @@ class Player(arcade.Sprite):
         # Limits on player's x position
         self.min_x_pos = min_x_pos
         self.max_x_pos = max_x_pos
+        self.min_y_pos = min_y_pos
+        self.max_y_pos = max_y_pos
 
         # Pass arguments to class arcade.Sprite
         super().__init__(
@@ -41,6 +43,11 @@ class Player(arcade.Sprite):
             self.left = self.min_x_pos
         elif self.right > self.max_x_pos:
             self.right = self.max_x_pos
+
+        if self.bottom < self.min_y_pos:
+            self.bottom = self.min_y_pos
+        elif self.top > self.max_y_pos:
+            self.top = self.max_y_pos
 
 
 class PlayerShot(arcade.Sprite):

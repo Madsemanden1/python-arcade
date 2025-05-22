@@ -61,6 +61,8 @@ class GameView(arcade.View):
             center_y=PLAYER_START_Y,
             min_x_pos=0,
             max_x_pos=SCREEN_WIDTH,
+            max_y_pos=600,
+            min_y_pos=0,
             scale=SPRITE_SCALING,
         )
 
