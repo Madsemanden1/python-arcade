@@ -143,25 +143,22 @@ class GameView(arcade.View):
         """
 
         # Player speed decreases
-        decrease = 0.9
-        self.player_list[0].change_x *= decrease
-        self.player_list[0].change_y *= decrease
+        for p in self.player_list:
+            decrease = 0.9
+            p.change_x *= decrease
+            p.change_y *= decrease
 
-        # Move player with joystick if present
-        if self.joystick:
-            self.player_list[0].change_x = round(self.joystick.x) * PLAYER_SPEED_X
+            p.on_update(delta_time)
 
-        # Update player sprite
-        self.player_list[0].on_update(delta_time)
+            for w in self.walls_list:
+                if w.collides_with_sprite(p):
+                    # Gives the player the opposite speed
+                    p.change_x *= -1.2
+                    p.change_y *= -1.2
+                    # Moves the player out of the wall - important that this is last!
+                    p.on_update(delta_time)
 
-        # Check if the player hits any walls
-        for w in self.walls_list:
-            if w.collides_with_sprite(self.player_list[0]):
-                # Gives the player the opposite speed
-                self.player_list[0].change_x *= -1.2
-                self.player_list[0].change_y *= -1.2
-                # Moves the player out of the wall
-                self.player_list[0].on_update(delta_time)
+
 
         # Update the player shots
         self.player_shot_list.on_update(delta_time)
