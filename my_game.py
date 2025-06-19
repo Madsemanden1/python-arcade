@@ -56,7 +56,7 @@ class GameView(arcade.View):
         self.player_lives = PLAYER_LIVES
 
         # Create a Player object
-        self.player = Player(
+        p = Player(
             center_x=PLAYER_START_X,
             center_y=PLAYER_START_Y,
             min_x_pos=0,
@@ -65,6 +65,8 @@ class GameView(arcade.View):
             min_y_pos=0,
             scale=SPRITE_SCALING,
         )
+        self.player_list = arcade.SpriteList()
+        self.player_list.append(p)
 
         # Track the current state of what keys are pressed
         self.left_pressed = False
@@ -123,7 +125,7 @@ class GameView(arcade.View):
         self.player_shot_list.draw()
 
         # Draw the player sprite
-        self.player.draw()
+        self.player_list.draw()
 
         self.walls_list.draw()
 
@@ -140,42 +142,26 @@ class GameView(arcade.View):
         Movement and game logic
         """
 
-        # Calculate player speed based on the keys pressed
-        self.player.change_angle = 0
-        # self.player.change_x = 0
-        # self.player.change_y = 0
-
         # Player speed decreases
         decrease = 0.9
-        self.player.change_x *= decrease
-        self.player.change_y *= decrease
-
-        # Rotate player
-        if self.left_pressed and not self.right_pressed:
-            self.player.change_angle = PLAYER_SPEED_ANGLE
-        elif self.right_pressed and not self.left_pressed:
-            self.player.change_angle = -PLAYER_SPEED_ANGLE
-
-        if self.up_pressed and not self.down_pressed:
-            self.player.forward(speed=PLAYER_SPEED_FORWARDS)
-        elif self.down_pressed and not self.up_pressed:
-            self.player.forward(speed=-PLAYER_SPEED_BACKWARDS)
+        self.player_list[0].change_x *= decrease
+        self.player_list[0].change_y *= decrease
 
         # Move player with joystick if present
         if self.joystick:
-            self.player.change_x = round(self.joystick.x) * PLAYER_SPEED_X
+            self.player_list[0].change_x = round(self.joystick.x) * PLAYER_SPEED_X
 
         # Update player sprite
-        self.player.on_update(delta_time)
+        self.player_list[0].on_update(delta_time)
 
         # Check if the player hits any walls
         for w in self.walls_list:
-            if w.collides_with_sprite(self.player):
+            if w.collides_with_sprite(self.player_list[0]):
                 # Gives the player the opposite speed
-                self.player.change_x *= -1.2
-                self.player.change_y *= -1.2
+                self.player_list[0].change_x *= -1.2
+                self.player_list[0].change_y *= -1.2
                 # Moves the player out of the wall
-                self.player.on_update(delta_time)
+                self.player_list[0].on_update(delta_time)
 
         # Update the player shots
         self.player_shot_list.on_update(delta_time)
@@ -204,12 +190,15 @@ class GameView(arcade.View):
         """
         Called whenever a key is pressed.
         """
+        for p in self.player_list:
+            p.on_key_press(key, modifiers)
 
         # End the game if the escape key is pressed
         if key == arcade.key.ESCAPE:
             self.game_over()
 
         # Track state of arrow keys
+        """
         if key in KEYS_UP:
             self.up_pressed = True
         elif key in KEYS_DOWN:
@@ -218,6 +207,7 @@ class GameView(arcade.View):
             self.left_pressed = True
         elif key in KEYS_RIGHT:
             self.right_pressed = True
+        """
 
         if key in KEYS_FIRE:
             # Player gets points for firing?
@@ -225,12 +215,12 @@ class GameView(arcade.View):
 
             # Create the new shot
             new_shot = PlayerShot(
-                center_x=self.player.center_x,
-                center_y=self.player.center_y,
+                center_x=self.player_list[0].center_x,
+                center_y=self.player_list[0].center_y,
                 speed=PLAYER_SHOT_SPEED,
                 max_y_pos=SCREEN_HEIGHT,
                 scale=SPRITE_SCALING,
-                angle=self.player.angle
+                angle=self.player_list[0].angle
             )
 
             # Add the new shot to the list of shots
@@ -240,6 +230,8 @@ class GameView(arcade.View):
         """
         Called whenever a key is released.
         """
+        for p in self.player_list:
+            p.on_key_release(key, modifiers)
 
         if key in KEYS_UP:
             self.up_pressed = False
