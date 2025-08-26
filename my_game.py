@@ -29,13 +29,27 @@ PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
 PLAYER_SHOT_SPEED = 300
 
-KEYS_FIRE = [arcade.key.SPACE]
+KEYS_FIRE = [arcade.key.SPACE, arcade.key.RSHIFT]
 KEYS_RIGHT = [arcade.key.D, arcade.key.RIGHT]
 KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
 KEYS_UP = [arcade.key.W, arcade.key.UP]
 KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
 
 WALLS = 15
+
+P1_KEYS = {
+    arcade.key.A: "LEFT",
+    arcade.key.D: "RIGHT",
+    arcade.key.W: "UP",
+    arcade.key.S: "DOWN"
+}
+
+P2_KEYS = {
+    arcade.key.LEFT: "LEFT",
+    arcade.key.RIGHT: "RIGHT",
+    arcade.key.UP: "UP",
+    arcade.key.DOWN: "DOWN"
+}
 
 
 class GameView(arcade.View):
@@ -64,6 +78,7 @@ class GameView(arcade.View):
             max_y_pos=600,
             min_y_pos=0,
             scale=SPRITE_SCALING,
+            controls=P1_KEYS
         )
 
         p2 = Player(
@@ -74,6 +89,7 @@ class GameView(arcade.View):
             max_y_pos=600,
             min_y_pos=0,
             scale=SPRITE_SCALING,
+            controls=P2_KEYS
         )
 
         self.player_list = arcade.SpriteList()
@@ -201,20 +217,9 @@ class GameView(arcade.View):
         if key == arcade.key.ESCAPE:
             self.game_over()
 
-        # Track state of arrow keys
-        """
-        if key in KEYS_UP:
-            self.up_pressed = True
-        elif key in KEYS_DOWN:
-            self.down_pressed = True
-        elif key in KEYS_LEFT:
-            self.left_pressed = True
-        elif key in KEYS_RIGHT:
-            self.right_pressed = True
-        """
 
         if key in KEYS_FIRE:
-            # Player gets points for firing?
+            # Player loses health for shooting
             self.player_score -= 1
 
             # Create the new shot
