@@ -56,7 +56,7 @@ class GameView(arcade.View):
         self.player_lives = PLAYER_LIVES
 
         # Create a Player object
-        p = Player(
+        p1 = Player(
             center_x=PLAYER_START_X,
             center_y=PLAYER_START_Y,
             min_x_pos=0,
@@ -65,14 +65,21 @@ class GameView(arcade.View):
             min_y_pos=0,
             scale=SPRITE_SCALING,
         )
-        self.player_list = arcade.SpriteList()
-        self.player_list.append(p)
 
-        # Track the current state of what keys are pressed
-        self.left_pressed = False
-        self.right_pressed = False
-        self.up_pressed = False
-        self.down_pressed = False
+        p2 = Player(
+            center_x=PLAYER_START_X,
+            center_y=PLAYER_START_Y+100,
+            min_x_pos=0,
+            max_x_pos=SCREEN_WIDTH,
+            max_y_pos=600,
+            min_y_pos=0,
+            scale=SPRITE_SCALING,
+        )
+
+        self.player_list = arcade.SpriteList()
+        self.player_list.append(p1)
+        self.player_list.append(p2)
+
 
         self.walls_list = arcade.SpriteList()
 
@@ -124,7 +131,7 @@ class GameView(arcade.View):
         # Draw the player shot
         self.player_shot_list.draw()
 
-        # Draw the player sprite
+        # Draw the player sprites
         self.player_list.draw()
 
         self.walls_list.draw()
