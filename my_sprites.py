@@ -4,12 +4,9 @@ import arcade
 
 
 class Player(arcade.Sprite):
-    """
-    The player
-    """
-
     def __init__(
             self,
+            controls,
             min_x_pos,
             max_x_pos,
             min_y_pos,
@@ -18,12 +15,6 @@ class Player(arcade.Sprite):
             center_y=0,
             scale=1,
             angle=90,
-            controls={
-                arcade.key.A: "LEFT",
-                arcade.key.D: "RIGHT",
-                arcade.key.W: "UP",
-                arcade.key.S: "DOWN"
-                  },
             speed_angle=10
     ):
         """
@@ -43,6 +34,7 @@ class Player(arcade.Sprite):
         self.speed_angle = 200
         self.speed_forwards = 30
         self.speed_backwards = self.speed_forwards
+        self.shots_list = arcade.SpriteList()
 
         # Pass arguments to class arcade.Sprite
         super().__init__(
@@ -89,6 +81,7 @@ class Player(arcade.Sprite):
 
     def on_key_press(self, key, modifiers):
 
+
         action = self.controls.get(key)
         if action == "LEFT":
             self.left_pressed = True
@@ -98,6 +91,9 @@ class Player(arcade.Sprite):
             self.up_pressed = True
         elif action == "DOWN":
             self.down_pressed = True
+        elif action == "FIRE":
+            self.fire()
+
 
     def on_key_release(self, key, modifiers):
         action = self.controls.get(key)
@@ -110,6 +106,17 @@ class Player(arcade.Sprite):
         if action == "DOWN":
             self.down_pressed = False
 
+    def fire(self):
+        new_shot = PlayerShot(
+            center_x=self.center_x,
+            center_y=self.center_y,
+            speed=20,
+            max_y_pos=600,
+            scale=0.5,
+            angle=self.angle
+        )
+        self.shots_list.append(new_shot)
+        print(len(self.shots_list))
 
 
 class PlayerShot(arcade.Sprite):

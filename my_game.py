@@ -41,14 +41,16 @@ P1_KEYS = {
     arcade.key.A: "LEFT",
     arcade.key.D: "RIGHT",
     arcade.key.W: "UP",
-    arcade.key.S: "DOWN"
+    arcade.key.S: "DOWN",
+    arcade.key.E: "FIRE"
 }
 
 P2_KEYS = {
     arcade.key.LEFT: "LEFT",
     arcade.key.RIGHT: "RIGHT",
     arcade.key.UP: "UP",
-    arcade.key.DOWN: "DOWN"
+    arcade.key.DOWN: "DOWN",
+    arcade.key.PAGEUP: "FIRE"
 }
 
 
@@ -61,9 +63,6 @@ class GameView(arcade.View):
         """
         This is run once when we switch to this view
         """
-
-        # Variable that will hold a list of shots fired by the player
-        self.player_shot_list = arcade.SpriteList()
 
         # Set up the player info
         self.player_score = 20
@@ -144,11 +143,10 @@ class GameView(arcade.View):
         # Clear screen so we can draw new stuff
         self.clear()
 
-        # Draw the player shot
-        self.player_shot_list.draw()
-
         # Draw the player sprites
-        self.player_list.draw()
+        for p in self.player_list:
+            p.shots_list.draw()
+            p.draw()
 
         self.walls_list.draw()
 
@@ -172,6 +170,11 @@ class GameView(arcade.View):
             p.change_y *= decrease
 
             p.on_update(delta_time)
+            p.shots_list.update()
+
+            for w in self.walls_list:
+                for s in w.collides_with_list(p.shots_list):
+                    s.kill()
 
             for w in self.walls_list:
                 if w.collides_with_sprite(p):
@@ -180,16 +183,6 @@ class GameView(arcade.View):
                     p.change_y *= -1.2
                     # Moves the player out of the wall - important that this is last!
                     p.on_update(delta_time)
-
-
-
-        # Update the player shots
-        self.player_shot_list.on_update(delta_time)
-
-        # Check if shots hit any walls
-        for w in self.walls_list:
-            for s in w.collides_with_list(self.player_shot_list):
-                s.kill()
 
         # The game is over when the player shoots 20 times
         if self.player_score <= 0:
@@ -222,18 +215,6 @@ class GameView(arcade.View):
             # Player loses health for shooting
             self.player_score -= 1
 
-            # Create the new shot
-            new_shot = PlayerShot(
-                center_x=self.player_list[0].center_x,
-                center_y=self.player_list[0].center_y,
-                speed=PLAYER_SHOT_SPEED,
-                max_y_pos=SCREEN_HEIGHT,
-                scale=SPRITE_SCALING,
-                angle=self.player_list[0].angle
-            )
-
-            # Add the new shot to the list of shots
-            self.player_shot_list.append(new_shot)
 
     def on_key_release(self, key, modifiers):
         """
