@@ -176,6 +176,8 @@ class GameView(arcade.View):
                 for s in w.collides_with_list(p.shots_list):
                     s.kill()
 
+
+
             for w in self.walls_list:
                 if w.collides_with_sprite(p):
                     # Gives the player the opposite speed
