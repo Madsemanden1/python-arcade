@@ -71,7 +71,7 @@ class GameView(arcade.View):
         # Create a Player object
         p1 = Player(
             center_x=PLAYER_START_X,
-            center_y=PLAYER_START_Y,
+            center_y=50,
             min_x_pos=0,
             max_x_pos=SCREEN_WIDTH,
             max_y_pos=600,
@@ -82,12 +82,13 @@ class GameView(arcade.View):
 
         p2 = Player(
             center_x=PLAYER_START_X,
-            center_y=PLAYER_START_Y+100,
+            center_y=SCREEN_HEIGHT-50,
             min_x_pos=0,
             max_x_pos=SCREEN_WIDTH,
             max_y_pos=600,
             min_y_pos=0,
             scale=SPRITE_SCALING,
+            angle=-90,
             controls=P2_KEYS
         )
 
@@ -103,7 +104,7 @@ class GameView(arcade.View):
             a = random.choice([0, 90])
             w = arcade.Sprite(
                 center_x=random.randint(0,SCREEN_WIDTH),
-                center_y=random.randint(100, SCREEN_HEIGHT-100),
+                center_y=random.randint(150, SCREEN_HEIGHT-150),
                 filename= "images/UI/buttonBlue.png",
                 scale=s/3,
                 angle=a,
