@@ -99,9 +99,30 @@ class GameView(arcade.View):
 
         self.walls_list = arcade.SpriteList()
 
+# vælger et tal mellem 1 og 2
+        s = random.random()+1
+
+        t = arcade.make_soft_square_texture(
+            size=100,
+            center_alpha=255,
+            outer_alpha=255,
+            color=[255, 255, 255]
+        )
+
+        cw = arcade.Sprite(
+            center_x=400,
+            center_y=300,
+            filename="images/UI/buttonBlue.png",
+            scale=s/3,
+            angle=0,
+            texture=t
+        )
+        self.walls_list.append(cw)
+
         for i in range(WALLS):
-            s = random.randint(1, 2)
+            s = random.random()+1
             a = random.choice([0, 90])
+
             w = arcade.Sprite(
                 center_x=random.randint(0,SCREEN_WIDTH),
                 center_y=random.randint(150, SCREEN_HEIGHT-150),
@@ -109,7 +130,10 @@ class GameView(arcade.View):
                 scale=s/3,
                 angle=a,
             )
+
             self.walls_list.append(w)
+
+
 
         # Get list of joysticks
         joysticks = arcade.get_joysticks()

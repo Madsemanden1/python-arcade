@@ -116,7 +116,6 @@ class Player(arcade.Sprite):
             angle=self.angle
         )
         self.shots_list.append(new_shot)
-        print(len(self.shots_list))
 
 
 class PlayerShot(arcade.Sprite):
