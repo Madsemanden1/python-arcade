@@ -15,6 +15,7 @@ class Player(arcade.Sprite):
             center_y=0,
             scale=1,
             angle=90,
+            lives=3,
             speed_angle=10
     ):
         """
@@ -35,6 +36,7 @@ class Player(arcade.Sprite):
         self.speed_forwards = 30
         self.speed_backwards = self.speed_forwards
         self.shots_list = arcade.SpriteList()
+        self.lives=lives
 
         # Pass arguments to class arcade.Sprite
         super().__init__(

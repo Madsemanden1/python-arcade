@@ -197,9 +197,21 @@ class GameView(arcade.View):
             p.on_update(delta_time)
             p.shots_list.update()
 
+            for player_to_check in self.player_list:
+                if player_to_check != p:
+                    shots_hitting_me = p.collides_with_list(player_to_check.shots_list)
+                    if len(shots_hitting_me) > 0:
+                        p.lives -= 1
+                        print(p.lives)
+                        for s in shots_hitting_me:
+                            s.kill()
+                            if p.lives <= 0:
+                                print("player dead")
+                                p.kill()
             for w in self.walls_list:
                 for s in w.collides_with_list(p.shots_list):
                     s.kill()
+
 
 
 
