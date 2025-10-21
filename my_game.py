@@ -175,13 +175,14 @@ class GameView(arcade.View):
 
         self.walls_list.draw()
 
-        # Draw players score on screen
-        arcade.draw_text(
-            f"Shots left: {self.player_score}",  # Text to show
-            10,  # X position
-            SCREEN_HEIGHT - 20,  # Y positon
-            arcade.color.WHITE,  # Color of text
-        )
+        for i, p in enumerate(self.player_list, 1):
+            arcade.draw_text(
+                f"player {i} lives left: {p.lives}",
+                start_x=10,
+                start_y=SCREEN_HEIGHT - i*20,
+                color=arcade.color.WHITE
+            )
+
 
     def on_update(self, delta_time):
         """
@@ -189,7 +190,7 @@ class GameView(arcade.View):
         """
 
         # Player speed decreases
-        for p in self.player_list:
+        for player_no, p in enumerate(self.player_list):
             decrease = 0.9
             p.change_x *= decrease
             p.change_y *= decrease
@@ -197,24 +198,25 @@ class GameView(arcade.View):
             p.on_update(delta_time)
             p.shots_list.update()
 
-            for player_to_check in self.player_list:
-                if player_to_check != p:
-                    shots_hitting_me = p.collides_with_list(player_to_check.shots_list)
+            for other_player_to_check in self.player_list:
+                if other_player_to_check != p:
+                    shots_hitting_me = p.collides_with_list(other_player_to_check.shots_list)
                     if len(shots_hitting_me) > 0:
                         p.lives -= 1
                         print(p.lives)
                         for s in shots_hitting_me:
                             s.kill()
-                            if p.lives <= 0:
-                                print("player dead")
-                                p.kill()
+                    if p.lives <= 0:
+                        print(f"player {player_no} dead")
+                        p.kill()
+
+
+            # Remove shots that collide with walls
             for w in self.walls_list:
                 for s in w.collides_with_list(p.shots_list):
                     s.kill()
 
-
-
-
+            # Player collides with walls (bounce!)
             for w in self.walls_list:
                 if w.collides_with_sprite(p):
                     # Gives the player the opposite speed
