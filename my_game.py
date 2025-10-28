@@ -34,6 +34,7 @@ KEYS_RIGHT = [arcade.key.D, arcade.key.RIGHT]
 KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
 KEYS_UP = [arcade.key.W, arcade.key.UP]
 KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
+KEYS_RESET = [arcade.key.SPACE]
 
 WALLS = 15
 
@@ -65,7 +66,7 @@ class GameView(arcade.View):
         """
 
         # Set up the player info
-        self.player_score = 20
+        self.all_alive = True
         self.player_lives = PLAYER_LIVES
 
         # Create a Player object
@@ -183,51 +184,50 @@ class GameView(arcade.View):
                 color=arcade.color.WHITE
             )
 
-
     def on_update(self, delta_time):
         """
         Movement and game logic
         """
+        if len(self.player_list)<2:
+            self.all_alive = False
 
+        # Only works when both players are alive
+        if self.all_alive:
         # Player speed decreases
-        for player_no, p in enumerate(self.player_list):
-            decrease = 0.9
-            p.change_x *= decrease
-            p.change_y *= decrease
+            for player_no, p in enumerate(self.player_list):
+                decrease = 0.9
+                p.change_x *= decrease
+                p.change_y *= decrease
 
-            p.on_update(delta_time)
-            p.shots_list.update()
+                p.on_update(delta_time)
+                p.shots_list.update()
 
-            for other_player_to_check in self.player_list:
-                if other_player_to_check != p:
-                    shots_hitting_me = p.collides_with_list(other_player_to_check.shots_list)
-                    if len(shots_hitting_me) > 0:
-                        p.lives -= 1
-                        print(p.lives)
-                        for s in shots_hitting_me:
-                            s.kill()
-                    if p.lives <= 0:
-                        print(f"player {player_no} dead")
-                        p.kill()
+                for other_player_to_check in self.player_list:
+                    if other_player_to_check != p:
+                        shots_hitting_me = p.collides_with_list(other_player_to_check.shots_list)
+                        if len(shots_hitting_me) > 0:
+                            p.lives -= 1
+                            print(p.lives)
+                            for s in shots_hitting_me:
+                                s.kill()
+                        if p.lives <= 0:
+                            print(f"player {player_no} dead")
+                            p.kill()
 
 
-            # Remove shots that collide with walls
-            for w in self.walls_list:
-                for s in w.collides_with_list(p.shots_list):
-                    s.kill()
+                # Remove shots that collide with walls
+                for w in self.walls_list:
+                    for s in w.collides_with_list(p.shots_list):
+                        s.kill()
 
-            # Player collides with walls (bounce!)
-            for w in self.walls_list:
-                if w.collides_with_sprite(p):
-                    # Gives the player the opposite speed
-                    p.change_x *= -1.2
-                    p.change_y *= -1.2
-                    # Moves the player out of the wall - important that this is last!
-                    p.on_update(delta_time)
-
-        # The game is over when the player shoots 20 times
-        if self.player_score <= 0:
-            self.game_over()
+                # Player collides with walls (bounce!)
+                    for w in self.walls_list:
+                        if w.collides_with_sprite(p):
+                            # Gives the player the opposite speed
+                            p.change_x *= -1.2
+                            p.change_y *= -1.2
+                            # Moves the player out of the wall - important that this is last!
+                            p.on_update(delta_time)
 
     def game_over(self):
         """
@@ -235,7 +235,7 @@ class GameView(arcade.View):
         """
 
         # Create a game over view
-        game_over_view = GameOverView(score=self.player_score)
+        game_over_view = GameOverView(score=20)
 
         # Change to game over view
         self.window.show_view(game_over_view)
@@ -252,15 +252,11 @@ class GameView(arcade.View):
             self.game_over()
 
 
-        if key in KEYS_FIRE:
-            # Player loses health for shooting
-            self.player_score -= 1
-
-
     def on_key_release(self, key, modifiers):
         """
         Called whenever a key is released.
         """
+
         for p in self.player_list:
             p.on_key_release(key, modifiers)
 
@@ -272,6 +268,11 @@ class GameView(arcade.View):
             self.left_pressed = False
         elif key in KEYS_RIGHT:
             self.right_pressed = False
+
+        if self.all_alive == False:
+            if key in KEYS_RESET:
+                self.game_over()
+
 
     def on_joybutton_press(self, joystick, button_no):
         print("Button pressed:", button_no)
