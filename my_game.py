@@ -68,6 +68,7 @@ class GameView(arcade.View):
         # Set up the player info
         self.all_alive = True
         self.player_lives = PLAYER_LIVES
+        self.game_updating = True
 
         # Create a Player object
         p1 = Player(
@@ -188,6 +189,9 @@ class GameView(arcade.View):
         """
         Movement and game logic
         """
+        if self.game_updating == False:
+            return
+
         if len(self.player_list)<2:
             self.all_alive = False
 
@@ -213,6 +217,8 @@ class GameView(arcade.View):
                         if p.lives <= 0:
                             print(f"player {player_no} dead")
                             p.kill()
+                            self.game_updating = False
+
 
 
                 # Remove shots that collide with walls
@@ -269,7 +275,7 @@ class GameView(arcade.View):
         elif key in KEYS_RIGHT:
             self.right_pressed = False
 
-        if self.all_alive == False:
+        if self.game_updating == False:
             if key in KEYS_RESET:
                 self.game_over()
 
@@ -397,15 +403,6 @@ class GameOverView(arcade.View):
             anchor_x="center",
         )
 
-        # Draw player's score
-        arcade.draw_text(
-            f"You had {self.score} shots left!",
-            self.window.width / 2,
-            self.window.height / 2 - 75,
-            arcade.color.WHITE,
-            font_size=20,
-            anchor_x="center",
-        )
 
     def on_key_press(self, key: int, modifiers: int):
         """
