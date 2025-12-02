@@ -68,6 +68,7 @@ class GameView(arcade.View):
         # Set up the player info
         self.all_alive = True
         self.player_lives = PLAYER_LIVES
+        self.game_updating = True
 
         # Create a Player object
         p1 = Player(
@@ -188,6 +189,9 @@ class GameView(arcade.View):
         """
         Movement and game logic
         """
+        if self.game_updating == False:
+            return
+
         if len(self.player_list)<2:
             self.all_alive = False
 
@@ -213,6 +217,8 @@ class GameView(arcade.View):
                         if p.lives <= 0:
                             print(f"player {player_no} dead")
                             p.kill()
+                            self.game_updating = False
+
 
 
                 # Remove shots that collide with walls
@@ -235,7 +241,7 @@ class GameView(arcade.View):
         """
 
         # Create a game over view
-        game_over_view = GameOverView(score=20)
+        game_over_view = GameOverView(self.player_list)
 
         # Change to game over view
         self.window.show_view(game_over_view)
@@ -269,7 +275,7 @@ class GameView(arcade.View):
         elif key in KEYS_RIGHT:
             self.right_pressed = False
 
-        if self.all_alive == False:
+        if self.game_updating == False:
             if key in KEYS_RESET:
                 self.game_over()
 
@@ -354,11 +360,11 @@ class GameOverView(arcade.View):
     View to show when the game is over
     """
 
-    def __init__(self, score, window=None):
+    def __init__(self, players, window=None):
         """
-        Create a Gaome Over view. Pass the final score to display.
+        Create a Game Over view. Pass the final score to display.
         """
-        self.score = score
+        self.players = players
 
         super().__init__(window)
 
@@ -396,16 +402,16 @@ class GameOverView(arcade.View):
             font_size=50,
             anchor_x="center",
         )
+        for p in (self.players):
+            arcade.draw_text(
+                f"The winner had {p.lives} lives left!",
+                self.window.width / 2,
+                self.window.height / 2.5,
+                arcade.color.LIGHT_BLUE,
+                font_size=20,
+                anchor_x="center",
+            )
 
-        # Draw player's score
-        arcade.draw_text(
-            f"You had {self.score} shots left!",
-            self.window.width / 2,
-            self.window.height / 2 - 75,
-            arcade.color.WHITE,
-            font_size=20,
-            anchor_x="center",
-        )
 
     def on_key_press(self, key: int, modifiers: int):
         """
