@@ -16,7 +16,8 @@ class Player(arcade.Sprite):
             scale=1,
             angle=90,
             lives=3,
-            speed_angle=10
+            color=[0,0,0],
+            speed_angle=10,
     ):
         """
         Setup new Player object
@@ -48,6 +49,8 @@ class Player(arcade.Sprite):
             flipped_horizontally=True,
             angle=angle
         )
+        self.color = color
+        print(self.color)
 
     def on_update(self, delta_time):
         """
@@ -156,7 +159,7 @@ class PlayerShot(arcade.Sprite):
         Move the sprite
         """
 
-        # Update the position of the sprite
+        # Update the position of the sprite (the shot)
         self.center_x += delta_time * self.change_x
         self.center_y += delta_time * self.change_y
 

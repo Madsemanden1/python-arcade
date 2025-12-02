@@ -79,7 +79,8 @@ class GameView(arcade.View):
             max_y_pos=600,
             min_y_pos=0,
             scale=SPRITE_SCALING,
-            controls=P1_KEYS
+            controls=P1_KEYS,
+            color=[225,155,155]
         )
 
         p2 = Player(
@@ -91,7 +92,8 @@ class GameView(arcade.View):
             min_y_pos=0,
             scale=SPRITE_SCALING,
             angle=-90,
-            controls=P2_KEYS
+            controls=P2_KEYS,
+            color=[152,148,255]
         )
 
         self.player_list = arcade.SpriteList()
