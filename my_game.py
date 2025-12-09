@@ -7,8 +7,7 @@ Artwork from https://kenney.nl/assets/space-shooter-redux
 
 """
 
-import arcade
-import random
+import arcade, random
 
 # Import sprites from local file my_sprites.py
 from my_sprites import Player, PlayerShot
@@ -364,11 +363,11 @@ class GameOverView(arcade.View):
     View to show when the game is over
     """
 
-    def __init__(self, players, window=None):
+    def __init__(self, player_list, window=None):
         """
         Create a Game Over view. Pass the final score to display.
         """
-        self.players = players
+        self.player_list = player_list
 
         super().__init__(window)
 
@@ -406,7 +405,15 @@ class GameOverView(arcade.View):
             font_size=50,
             anchor_x="center",
         )
-        for p in (self.players):
+
+        for p in self.player_list:
+            p.draw()
+            p.center_x = SCREEN_WIDTH/2
+            p.center_y = 150
+            p.angle = 90
+            p.scale = 1.5
+
+        for p in (self.player_list):
             arcade.draw_text(
                 f"The winner had {p.lives} lives left!",
                 self.window.width / 2,
