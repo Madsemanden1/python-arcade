@@ -1,4 +1,4 @@
-import arcade
+import arcade, math
 
 #from my_game import PLAYER_SPEED_ANGLE
 
@@ -17,6 +17,7 @@ class Player(arcade.Sprite):
             angle=90,
             lives=3,
             color=[0,0,0],
+            time_since_last_shot=math.inf,
             speed_angle=10,
     ):
         """
@@ -37,8 +38,8 @@ class Player(arcade.Sprite):
         self.speed_forwards = 30
         self.speed_backwards = self.speed_forwards
         self.shots_list = arcade.SpriteList()
-        self.lives=lives
-
+        self.lives = lives
+        self.time_since_last_shot = time_since_last_shot
         # Pass arguments to class arcade.Sprite
         super().__init__(
             center_x=center_x,
@@ -50,7 +51,7 @@ class Player(arcade.Sprite):
             angle=angle
         )
         self.color = color
-        print(self.color)
+
 
     def on_update(self, delta_time):
         """
@@ -83,6 +84,8 @@ class Player(arcade.Sprite):
             self.forward(speed=self.speed_forwards)
         if self.down_pressed and not self.up_pressed:
             self.forward(speed=-self.speed_backwards)
+
+        self.time_since_last_shot += delta_time
 
     def on_key_press(self, key, modifiers):
 
@@ -120,7 +123,10 @@ class Player(arcade.Sprite):
             scale=0.5,
             angle=self.angle
         )
-        self.shots_list.append(new_shot)
+        self.time_between_shots = 1
+        if self.time_since_last_shot >= self.time_between_shots:
+            self.shots_list.append(new_shot)
+            self.time_since_last_shot = 0
 
 
 class PlayerShot(arcade.Sprite):

@@ -36,7 +36,7 @@ KEYS_UP = [arcade.key.W, arcade.key.UP]
 KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
 KEYS_RESET = [arcade.key.SPACE]
 
-WALLS = 15
+WALLS = 15 #set to 15 for normal game
 
 P1_KEYS = {
     arcade.key.A: "LEFT",
@@ -198,6 +198,7 @@ class GameView(arcade.View):
             self.all_alive = False
 
         # Only works when both players are alive
+
         if self.all_alive:
         # Player speed decreases
             for player_no, p in enumerate(self.player_list):
@@ -208,6 +209,7 @@ class GameView(arcade.View):
                 p.on_update(delta_time)
                 p.shots_list.update()
 
+
                 for other_player_to_check in self.player_list:
                     if other_player_to_check != p:
                         shots_hitting_me = p.collides_with_list(other_player_to_check.shots_list)
@@ -217,7 +219,7 @@ class GameView(arcade.View):
                             for s in shots_hitting_me:
                                 s.kill()
                         if p.lives <= 0:
-                            print(f"player {player_no} dead")
+                            print(f"player {player_no+1} dead")
                             p.kill()
                             self.game_updating = False
 
