@@ -17,6 +17,7 @@ class Player(arcade.Sprite):
             angle=90,
             lives=3,
             color=[0,0,0],
+            name=None,
             time_since_last_shot=math.inf,
             speed_angle=10,
     ):
@@ -40,6 +41,7 @@ class Player(arcade.Sprite):
         self.shots_list = arcade.SpriteList()
         self.lives = lives
         self.time_since_last_shot = time_since_last_shot
+        self.name = name
         # Pass arguments to class arcade.Sprite
         super().__init__(
             center_x=center_x,
