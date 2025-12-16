@@ -7,8 +7,7 @@ Artwork from https://kenney.nl/assets/space-shooter-redux
 
 """
 
-import arcade
-import random
+import arcade, random
 
 # Import sprites from local file my_sprites.py
 from my_sprites import Player, PlayerShot
@@ -66,9 +65,7 @@ class GameView(arcade.View):
         """
 
         # Set up the player info
-        self.all_alive = True
         self.player_lives = PLAYER_LIVES
-        self.game_updating = True
 
         # Create a Player object
         p1 = Player(
@@ -80,7 +77,8 @@ class GameView(arcade.View):
             min_y_pos=0,
             scale=SPRITE_SCALING,
             controls=P1_KEYS,
-            color=[225,155,155]
+            color=[225,155,155],
+            name="Player 1"
         )
 
         p2 = Player(
@@ -93,7 +91,8 @@ class GameView(arcade.View):
             scale=SPRITE_SCALING,
             angle=-90,
             controls=P2_KEYS,
-            color=[152,148,255]
+            color=[152,148,255],
+            name="Player 2"
         )
 
         self.player_list = arcade.SpriteList()
@@ -191,16 +190,10 @@ class GameView(arcade.View):
         """
         Movement and game logic
         """
-        if self.game_updating == False:
-            return
-
-        if len(self.player_list)<2:
-            self.all_alive = False
 
         # Only works when both players are alive
-
-        if self.all_alive:
-        # Player speed decreases
+        if len(self.player_list) > 1:
+            # Player speed decreases
             for player_no, p in enumerate(self.player_list):
                 decrease = 0.9
                 p.change_x *= decrease
@@ -215,13 +208,11 @@ class GameView(arcade.View):
                         shots_hitting_me = p.collides_with_list(other_player_to_check.shots_list)
                         if len(shots_hitting_me) > 0:
                             p.lives -= 1
-                            print(p.lives)
                             for s in shots_hitting_me:
                                 s.kill()
                         if p.lives <= 0:
                             print(f"player {player_no+1} dead")
                             p.kill()
-                            self.game_updating = False
 
 
 
@@ -279,7 +270,7 @@ class GameView(arcade.View):
         elif key in KEYS_RIGHT:
             self.right_pressed = False
 
-        if self.game_updating == False:
+        if len(self.player_list) <= 1:
             if key in KEYS_RESET:
                 self.game_over()
 
@@ -364,11 +355,11 @@ class GameOverView(arcade.View):
     View to show when the game is over
     """
 
-    def __init__(self, players, window=None):
+    def __init__(self, player_list, window=None):
         """
         Create a Game Over view. Pass the final score to display.
         """
-        self.players = players
+        self.player_list = player_list
 
         super().__init__(window)
 
@@ -406,9 +397,17 @@ class GameOverView(arcade.View):
             font_size=50,
             anchor_x="center",
         )
-        for p in (self.players):
+
+        for p in self.player_list:
+            p.draw()
+            p.center_x = SCREEN_WIDTH/2
+            p.center_y = 150
+            p.angle = 90
+            p.scale = 1.5
+
+        for p in (self.player_list):
             arcade.draw_text(
-                f"The winner had {p.lives} lives left!",
+                f"{p.name} won with {p.lives}/3 lives left!",
                 self.window.width / 2,
                 self.window.height / 2.5,
                 arcade.color.LIGHT_BLUE,
