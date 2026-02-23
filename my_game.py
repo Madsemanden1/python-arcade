@@ -7,7 +7,7 @@ Artwork from https://kenney.nl/assets/space-shooter-redux
 
 """
 
-import arcade, random
+import arcade, random, arcade.gui
 
 # Import sprites from local file my_sprites.py
 from my_sprites import Player, PlayerShot
@@ -28,11 +28,7 @@ PLAYER_START_X = SCREEN_WIDTH / 2
 PLAYER_START_Y = 50
 PLAYER_SHOT_SPEED = 300
 
-KEYS_FIRE = [arcade.key.SPACE, arcade.key.RSHIFT]
-KEYS_RIGHT = [arcade.key.D, arcade.key.RIGHT]
-KEYS_LEFT = [arcade.key.A, arcade.key.LEFT]
-KEYS_UP = [arcade.key.W, arcade.key.UP]
-KEYS_DOWN = [arcade.key.S, arcade.key.DOWN]
+
 KEYS_RESET = [arcade.key.SPACE]
 
 WALLS = 15 #set to 15 for normal game
@@ -50,7 +46,7 @@ P2_KEYS = {
     arcade.key.RIGHT: "RIGHT",
     arcade.key.UP: "UP",
     arcade.key.DOWN: "DOWN",
-    arcade.key.PAGEUP: "FIRE"
+    arcade.key.PAGEDOWN: "FIRE"
 }
 
 
@@ -102,9 +98,6 @@ class GameView(arcade.View):
 
         self.walls_list = arcade.SpriteList()
 
-# vælger et tal mellem 1 og 2
-        s = random.random()+1
-
         t = arcade.make_soft_square_texture(
             size=100,
             center_alpha=255,
@@ -112,26 +105,11 @@ class GameView(arcade.View):
             color=[255, 255, 255]
         )
 
-        cw = arcade.Sprite(
-            center_x=400,
-            center_y=300,
-            filename="images/UI/buttonBlue.png",
-            scale=s/3,
-            angle=0,
-            texture=t
-        )
-        self.walls_list.append(cw)
-
         for i in range(WALLS):
-            s = random.random()+1
-            a = random.choice([0, 90])
-
             w = arcade.Sprite(
-                center_x=random.randint(0,SCREEN_WIDTH),
-                center_y=random.randint(150, SCREEN_HEIGHT-150),
                 filename= "images/UI/buttonBlue.png",
-                scale=s/3,
-                angle=a,
+                scale=1,
+                angle=0,
             )
 
             self.walls_list.append(w)
@@ -261,15 +239,6 @@ class GameView(arcade.View):
         for p in self.player_list:
             p.on_key_release(key, modifiers)
 
-        if key in KEYS_UP:
-            self.up_pressed = False
-        elif key in KEYS_DOWN:
-            self.down_pressed = False
-        elif key in KEYS_LEFT:
-            self.left_pressed = False
-        elif key in KEYS_RIGHT:
-            self.right_pressed = False
-
         if len(self.player_list) <= 1:
             if key in KEYS_RESET:
                 self.game_over()
@@ -296,6 +265,53 @@ class IntroView(arcade.View):
     View to show instructions
     """
 
+    def __init__(self):
+        super().__init__()
+
+
+        # Creating a UI MANAGER to handle the UI
+        self.uimanager = arcade.gui.UIManager()
+        self.uimanager.enable()
+
+        # Creating Button using UIFlatButton
+        map_button_1 = arcade.gui.UIFlatButton(
+            text="map button 1",
+            width=200,
+            height=150
+        )
+
+        map_button_2 = arcade.gui.UIFlatButton(
+            text="map button 2",
+            width=200,
+            height=150
+        )
+
+        map_button_1.on_click = self.on_buttonclick
+        map_button_2.on_click = self.on_buttonclick
+
+        # Adding button in our uimanager
+        self.uimanager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center_x",
+                anchor_y="center_y",
+                align_x=-150,
+                align_y=-175,
+                child=map_button_1)
+        )
+
+        self.uimanager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center_x",
+                anchor_y="center_y",
+                align_x=+150,
+                align_y=-175,
+                child=map_button_2
+            )
+        )
+
+    def on_buttonclick(self, event):
+        print("map button clicked")
+
     def on_show_view(self):
         """
         This is run once when we switch to this view
@@ -308,11 +324,14 @@ class IntroView(arcade.View):
         # to reset the viewport back to the start so we can see what we draw.
         arcade.set_viewport(0, self.window.width, 0, self.window.height)
 
+
     def on_draw(self):
         """
         Draw this view
         """
         self.clear()
+        arcade.start_render()
+        self.uimanager.draw()
 
         # Draw some text
         arcade.draw_text(
@@ -324,11 +343,13 @@ class IntroView(arcade.View):
             anchor_x="center",
         )
 
+
+
         # Draw more text
         arcade.draw_text(
-            "Press any key to start the game",
+            "Choose any map to start the game",
             self.window.width / 2,
-            self.window.height / 2 - 75,
+            self.window.height / 2 - 55,
             arcade.color.COOL_BLACK,
             font_size=20,
             anchor_x="center",
