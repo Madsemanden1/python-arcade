@@ -286,8 +286,8 @@ class IntroView(arcade.View):
             height=150
         )
 
-        map_button_1.on_click = self.on_buttonclick
-        map_button_2.on_click = self.on_buttonclick
+        map_button_1.on_click = self.on_map1click
+        map_button_2.on_click = self.on_map2click
 
         # Adding button in our uimanager
         self.uimanager.add(
@@ -309,8 +309,12 @@ class IntroView(arcade.View):
             )
         )
 
-    def on_buttonclick(self, event):
-        print("map button clicked")
+    def on_map1click(self, event):
+        print("map button 1 clicked")
+
+
+    def on_map2click(self, event):
+        print("map button 2 clicked")
 
     def on_show_view(self):
         """
