@@ -49,8 +49,31 @@ P2_KEYS = {
     arcade.key.PAGEDOWN: "FIRE"
 }
 
+class LevelDescription():
+    def __init__(
+            self,
+            level_number,
+    ):
+
+        self.level_number = level_number
+
+        self.walls = arcade.SpriteList()
+        if self.level_number == 1:
+            w = arcade.Sprite(
+                filename="images/UI/buttonBlue.png",
+                scale=1,
+                center_x=90,
+                center_y=90
+            )
+
+            self.walls.append(w)
+
 
 class GameView(arcade.View):
+
+    def __init__(self, level):
+        self.level=level
+
     """
     The view with the game itself
     """
@@ -155,6 +178,7 @@ class GameView(arcade.View):
             p.draw()
 
         self.walls_list.draw()
+        self.level.draw()
 
         for i, p in enumerate(self.player_list, 1):
             arcade.draw_text(
@@ -267,7 +291,7 @@ class IntroView(arcade.View):
 
     def __init__(self):
         super().__init__()
-
+        self.level = None
 
         # Creating a UI MANAGER to handle the UI
         self.uimanager = arcade.gui.UIManager()
@@ -309,12 +333,15 @@ class IntroView(arcade.View):
             )
         )
 
+
+
     def on_map1click(self, event):
-        print("map button 1 clicked")
+        self.level = LevelDescription(level_number=1)
+
 
 
     def on_map2click(self, event):
-        print("map button 2 clicked")
+        self.level = LevelDescription(level_number=2)
 
     def on_show_view(self):
         """
@@ -372,7 +399,7 @@ class IntroView(arcade.View):
         self.game_start()
 
     def game_start(self):
-        self.window.show_view(GameView())
+        self.window.show_view(GameView(self.level))
 
 
 class GameOverView(arcade.View):
